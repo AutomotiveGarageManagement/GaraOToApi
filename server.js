@@ -39,6 +39,7 @@ app.use("/api/receipt/", require("./src/routes/receiptFormApi"));
 // Form Repair
 app.use("/api/repair/", require("./src/routes/repairFormApi"));
 app.use("/api/payment/", require("./src/routes/paymentReceiptApi"));
+app.use("/api/carBrand/", require("./src/routes/carBrandApi"));
 // config body bodyParser
 app.use(
   bodyParser.urlencoded({
