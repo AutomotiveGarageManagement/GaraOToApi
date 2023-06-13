@@ -1,14 +1,14 @@
 const {
-  insertCarBrand,
+  insertSupplier,
   updateInfo,
-  deleteCar,
-  getAllCarInfo,
-  findWithName,
-} = require("../services/carBrandServices");
-const createANewCarBrand = async (req, res) => {
+  deleteSupplier,
+  getAllSupplier,
+  findSupplierWithName,
+} = require("../services/supplierServices");
+const createANewSupplier = async (req, res) => {
   try {
-    const { TenHX } = req.body.TenHX;
-    const data = await insertCarBrand(TenHX);
+    const { TenNCC, SDT, DiaChiNhaCungCap, HoTenNDD } = req.body;
+    const data = await insertSupplier(TenNCC, SDT, DiaChiNhaCungCap, HoTenNDD);
     if (data && +data.EC == 1) {
       return res.status(201).json({
         Em: data.EM,
@@ -24,13 +24,13 @@ const createANewCarBrand = async (req, res) => {
   } catch (error) {
     console.log("Error:" + error);
     return res.status(500).json({
-      EM: "Server Error: Thêm hãng xe không thành công!",
+      EM: "Server Error: Thêm nhà cung cấp không thành công!",
     });
   }
 };
-const getAllCarBrand = async (req, res) => {
+const getAllSupplierInfo = async (req, res) => {
   try {
-    const data = await getAllCarInfo();
+    const data = await getAllSupplier();
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,
@@ -48,16 +48,18 @@ const getAllCarBrand = async (req, res) => {
   } catch (eror) {
     console.log(error);
     return res.status(500).json({
-      EM: "Server Error : Lấy danh sách hãng xe thất bại!",
+      EM: "Server Error : Lấy danh sách nhà cung cấp  thất bại!",
       EC: -1,
       DT: "",
     });
   }
 };
-const updateCarInfo = async (req, res) => {
+const updateSupplierInfo = async (req, res) => {
   const id = req.params.id;
+  const { TenNCC, SDT, DiaChiNhaCungCap, HoTenNDD } = req.body;
   try {
-    const data = await updateInfo(id, req.body.TenHX);
+    const data = await updateInfo(id, TenNCC, SDT, DiaChiNhaCungCap, HoTenNDD);
+
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,
@@ -81,9 +83,9 @@ const updateCarInfo = async (req, res) => {
     });
   }
 };
-const removeCarBrand = async (req, res) => {
+const removeSupplier = async (req, res) => {
   try {
-    await deleteCar(req.params.id);
+    await deleteSupplier(req.params.id);
     return res.status(203).json({
       EM: "Xóa Thành Công!",
       EC: 1,
@@ -92,15 +94,15 @@ const removeCarBrand = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      EM: "Error from server",
+      EM: "Error from server : Xóa không thành công!",
       EC: -1,
       DT: "",
     });
   }
 };
-const searchCarBrand = async (req, res) => {
+const searchSupplier = async (req, res) => {
   try {
-    const data = await findWithName(req.body.TenHX);
+    const data = await findSupplierWithName(req.body.TenNCC);
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,
@@ -118,16 +120,16 @@ const searchCarBrand = async (req, res) => {
   } catch (eror) {
     console.log(error);
     return res.status(500).json({
-      EM: "Server Error : Lấy danh sách hãng xe thất bại!",
+      EM: "Server Error : Lấy danh sách nhà cung cấp thất bại!",
       EC: -1,
       DT: "",
     });
   }
 };
 module.exports = {
-  createANewCarBrand,
-  getAllCarBrand,
-  updateCarInfo,
-  removeCarBrand,
-  searchCarBrand,
+  createANewSupplier,
+  updateSupplierInfo,
+  removeSupplier,
+  getAllSupplierInfo,
+  searchSupplier,
 };
