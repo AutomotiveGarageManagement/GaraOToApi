@@ -30,9 +30,12 @@ const insertReception = async (
       };
     }
   } catch (error) {
-    console.log("Tạo mới phiếu tiếp nhận lỗi : " + error);
+    console.log(
+      "Lập phiếu tiếp nhận bị lỗi :",
+      error.originalError.info.message
+    );
     return {
-      EM: "Tạo mới phiếu tiếp nhận  không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };

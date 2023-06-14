@@ -3,9 +3,7 @@ const config = require("../configs/configDataBase");
 const insertRepair = async (MaTN, TongTien) => {
   try {
     const poolConnection = await sql.connect(config);
-    let data = await poolConnection.query(
-      `exec sp_insert_repair '${MaTN}','${TongTien}' `
-    );
+    let data = await poolConnection.query(`exec sp_insert_repair '${MaTN}' `);
 
     poolConnection.close();
     if (data) {
@@ -36,13 +34,12 @@ const insertRepairDetail = async (
   NoiDung,
   DonGia,
   TienCong,
-  SoLuong,
-  TongTien
+  SoLuong
 ) => {
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_insert_repair_details '${MaPSX}' , '${MaTienCong}','${MaVTPT}',N'${NoiDung}' , '${DonGia}','${TienCong}','${SoLuong}','${TongTien}' `
+      `exec sp_insert_repair_details '${MaPSX}' , '${MaTienCong}','${MaVTPT}',N'${NoiDung}' , '${DonGia}','${TienCong}','${SoLuong}' `
     );
     poolConnection.close();
     if (data) {
@@ -82,8 +79,7 @@ const addRepair = async (req) => {
         productDetail.NoiDung,
         productDetail.DonGia,
         productDetail.TienCong,
-        productDetail.SoLuong,
-        productDetail.TongTien
+        productDetail.SoLuong
       );
 
       return {
@@ -91,10 +87,7 @@ const addRepair = async (req) => {
         EC: 1,
       };
     } else {
-      const ticketRepair = await insertRepair(
-        req.body.MaTN,
-        req.body.productDetail.TongTien
-      );
+      const ticketRepair = await insertRepair(req.body.MaTN);
 
       console.log(ticketRepair.MaPSX);
       if (ticketRepair.MaPSX) {
@@ -105,8 +98,7 @@ const addRepair = async (req) => {
           productDetail.NoiDung,
           productDetail.DonGia,
           productDetail.TienCong,
-          productDetail.SoLuong,
-          productDetail.TongTien
+          productDetail.SoLuong
         );
         return {
           EM: insertProductData.EM,

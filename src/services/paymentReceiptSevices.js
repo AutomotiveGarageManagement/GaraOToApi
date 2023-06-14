@@ -21,9 +21,9 @@ const insertPaymentForm = async (MaPhieuTN, SDT, Email, SoTienThu) => {
       };
     }
   } catch (error) {
-    console.log("Tạo mới phiếu thu tiền  lỗi : " + error);
+    console.log("Lập phiếu thu  bị lỗi :", error.originalError.info.message);
     return {
-      EM: "Tạo mới phiếu thu tiền không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
