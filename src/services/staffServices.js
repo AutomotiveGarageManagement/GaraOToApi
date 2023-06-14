@@ -38,7 +38,7 @@ const createANewStaff = async (
   } catch (error) {
     console.log("Create a new staff error : " + error);
     return {
-      EM: " Username exit in DataBase!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -84,7 +84,144 @@ const loginForStaff = async (TenTaiKhoan, MatKhau) => {
     };
   }
 };
+const getAllStaffInfo = async () => {
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection.request().query(`exec sp_getAll_Staff`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Get one user failed" + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
+const deleteStaff = async (id) => {
+  try {
+    const poolConnection = await sql.connect(config);
+    await poolConnection.query(`EXEC sp_delete_staff ${id}`);
+    poolConnection.close();
+  } catch (error) {
+    console.log("Delete staff error: " + error);
+  }
+};
+const findWithName = async (HoTen) => {
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection
+      .request()
+      .query(`exec sp_find_staff '${HoTen}'`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Get data failed" + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
+const getByID = async (id) => {
+  console.log(id);
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection
+      .request()
+      .query(`exec sp_get_staff_ByID '${id}'`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Get data failed" + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
+const updateInfo = async (
+  id,
+  HoTen,
+  GioiTinh,
+  CMND,
+  DiaChi,
+  SDT,
+  MaChucVu,
+  MatKhau
+) => {
+  try {
+    const poolConnection = await sql.connect(config);
+    let data = await poolConnection.query(
+      `exec sp_update_staff_info '${id}', N'${HoTen}' , '${GioiTinh}','${CMND}',N'${DiaChi}' , '${SDT}','${MaChucVu}','${MatKhau}' `
+    );
+    poolConnection.close();
+
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Cập Nhật Thành Công!",
+        EC: 1,
+        DT: "",
+      };
+    }
+  } catch (error) {
+    console.log("Update Car brand error", error.originalError.info.message);
+    return {
+      EM: error.originalError.info.message,
+      EC: -1,
+      DT: "",
+    };
+  }
+};
 module.exports = {
   loginForStaff,
   createANewStaff,
+  updateInfo,
+  deleteStaff,
+  findWithName,
+  getAllStaffInfo,
+  getByID,
 };
