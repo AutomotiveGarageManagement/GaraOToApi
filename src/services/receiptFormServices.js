@@ -6,6 +6,7 @@ const insertReception = async (
   DiaChiCX,
   SDT,
   Email,
+  CMND,
   MaHangXe,
   BienSoXe,
   GhiChu,
@@ -15,7 +16,7 @@ const insertReception = async (
     // let hashPassStaff = hashPassword(MatKhau);
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_insert_reception N'${TenChuXe}' , N'${DiaChiCX}','${SDT}',N'${Email}' , '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
+      `exec sp_insert_reception N'${TenChuXe}' , N'${DiaChiCX}','${SDT}',N'${Email}' ,'${CMND}','${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
     );
     poolConnection.close();
     if (data) {
@@ -78,6 +79,7 @@ const updateInfo = async (
   DiaChiCX,
   SDT,
   Email,
+  CMND,
   MaHangXe,
   BienSoXe,
   GhiChu,
@@ -86,11 +88,11 @@ const updateInfo = async (
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_reception '${id}', N'${TenChuXe}' , N'${DiaChiCX}','${SDT}','${Email}' , '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
+      `exec sp_update_reception '${id}', N'${TenChuXe}' , N'${DiaChiCX}','${SDT}','${Email}' ,'${CMND}', '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
     );
     poolConnection.close();
 
-    console.log(data);
+    console.log(CMND);
     if (data) {
       return {
         EM: "Cập Nhật Thành Công!",

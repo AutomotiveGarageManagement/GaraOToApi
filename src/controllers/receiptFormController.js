@@ -11,6 +11,7 @@ const createReception = async (req, res) => {
       DiaChiCX,
       SDT,
       Email,
+      CMND,
       MaHangXe,
       BienSoXe,
       GhiChu,
@@ -21,6 +22,7 @@ const createReception = async (req, res) => {
       DiaChiCX,
       SDT,
       Email,
+      CMND,
       MaHangXe,
       BienSoXe,
       GhiChu,
@@ -75,6 +77,7 @@ const getCustomerInfo = async (req, res) => {
 };
 const updateInfoReception = async (req, res) => {
   const id = req.params.id;
+  console.log(req.body);
   try {
     await updateInfo(
       id,
@@ -82,6 +85,7 @@ const updateInfoReception = async (req, res) => {
       req.body.DiaChiCX,
       req.body.SDT,
       req.body.Email,
+      req.body.CMND,
       req.body.MaHangXe,
       req.body.BienSoXe,
       req.body.GhiChu,
