@@ -1,7 +1,8 @@
 const {
   insertReception,
-  getInfoById,
+  getCustomerByIdentifyCard,
   updateInfo,
+  getAllReceptionInfo,
 } = require("../services/receiptFormServices");
 const createReception = async (req, res) => {
   try {
@@ -44,11 +45,11 @@ const createReception = async (req, res) => {
     });
   }
 };
-const getInfoFormReceipt = async (req, res) => {
+const getCustomerInfo = async (req, res) => {
   try {
-    const MaCX = req.body.MaCX;
-    console.log(MaCX);
-    const data = await getInfoById(MaCX);
+    const CMND = req.body.CMND;
+    // console.log(MaCX);
+    const data = await getCustomerByIdentifyCard(CMND);
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,
@@ -100,9 +101,36 @@ const updateInfoReception = async (req, res) => {
     });
   }
 };
+const getAllReceptions = async (req, res) => {
+  try {
+    const data = await getAllReceptionInfo();
+    if (data && +data.EC === 1) {
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    }
+    if (data && +data.EC != 1) {
+      return res.status(500).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Server Error : Lấy danh sách nhân viên thất bại!",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
 
 module.exports = {
   createReception,
-  getInfoFormReceipt,
+  getCustomerInfo,
   updateInfoReception,
+  getAllReceptions,
 };

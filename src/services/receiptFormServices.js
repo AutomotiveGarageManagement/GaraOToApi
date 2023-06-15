@@ -41,15 +41,15 @@ const insertReception = async (
     };
   }
 };
-const getInfoById = async (MaCX) => {
+const getCustomerByIdentifyCard = async (CMND) => {
   try {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_reception '${MaCX}'`);
+      .query(`exec sp_getInfo_reception '${CMND}'`);
     poolConnection.close();
     console.log(data);
-    if (data) {
+    if (data.recordset.length > 0) {
       return {
         EM: "Lấy Thông Tin thành công!",
         EC: 1,
@@ -57,7 +57,7 @@ const getInfoById = async (MaCX) => {
       };
     } else {
       return {
-        EM: "Lấy thông in thất bại!",
+        EM: "Lấy thông tin thất bại!",
         EC: 0,
         DT: [],
       };
@@ -71,6 +71,7 @@ const getInfoById = async (MaCX) => {
     };
   }
 };
+
 const updateInfo = async (
   id,
   TenChuXe,
@@ -106,8 +107,39 @@ const updateInfo = async (
     };
   }
 };
+const getAllReceptionInfo = async () => {
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection
+      .request()
+      .query(`exec sp_getAll_receptions`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Get one user failed" + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
 module.exports = {
   insertReception,
-  getInfoById,
+  getCustomerByIdentifyCard,
   updateInfo,
+  getAllReceptionInfo,
 };

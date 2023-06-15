@@ -29,15 +29,15 @@ const insertPaymentForm = async (MaPhieuTN, SDT, Email, SoTienThu) => {
     };
   }
 };
-const getInfoById = async (MaCX) => {
+const getInfoById = async (MaTN) => {
   try {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_receipt '${MaCX}'`);
+      .query(`exec sp_getInfo_receipt '${MaTN}'`);
     poolConnection.close();
     console.log(data);
-    if (data) {
+    if (data.recordset.length > 0) {
       return {
         EM: "Lấy Thông Tin thành công!",
         EC: 1,

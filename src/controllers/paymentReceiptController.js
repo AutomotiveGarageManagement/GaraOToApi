@@ -28,9 +28,9 @@ const createPaymentReceipt = async (req, res) => {
 };
 const getInfoPaymentReceipt = async (req, res) => {
   try {
-    const MaCX = req.body.MaCX;
-    console.log(MaCX);
-    const data = await getInfoById(MaCX);
+    const MaTN = req.body.MaTN;
+    console.log(MaTN);
+    const data = await getInfoById(MaTN);
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,

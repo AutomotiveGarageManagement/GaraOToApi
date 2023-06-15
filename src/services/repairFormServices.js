@@ -64,10 +64,10 @@ const insertRepairDetail = async (
 };
 const addRepair = async (req) => {
   try {
-    const { BienSoXe, MaTN, productDetail } = req.body;
+    const { MaTN, productDetail } = req.body;
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_check_TonTai_PhieuSX '${BienSoXe}' `
+      `exec sp_check_TonTai_PhieuSX '${MaTN}' `
     );
     poolConnection.close();
 
@@ -119,15 +119,15 @@ const addRepair = async (req) => {
     };
   }
 };
-const getInfoById = async (MaCX) => {
+const getInfoById = async (MaTN) => {
   try {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_repair_details '${MaCX}'`);
+      .query(`exec sp_getInfo_repair_details '${MaTN}'`);
     poolConnection.close();
     console.log(data);
-    if (data) {
+    if (data.recordset.length > 0) {
       return {
         EM: "Lấy Thông Tin thành công!",
         EC: 1,
