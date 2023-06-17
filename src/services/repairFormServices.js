@@ -21,7 +21,7 @@ const insertRepair = async (MaTN, TongTien) => {
   } catch (error) {
     console.log("Tạo mới phiếu sửa chữa bị lỗi : " + error);
     return {
-      EM: "Server Error : Tạo mới phiếu sửa chữa không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -56,7 +56,7 @@ const insertRepairDetail = async (
   } catch (error) {
     console.log("Thêm VTPT bị lỗi : " + error);
     return {
-      EM: "Server Error : Thêm VTPT không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -113,7 +113,7 @@ const addRepair = async (req) => {
   } catch (error) {
     console.log("Tạo mới phiếu sửa chữa bị lỗi : " + error);
     return {
-      EM: "Tạo mới phiếu sửa chữa không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -159,11 +159,11 @@ const removeProduct = async (id) => {
   }
 };
 
-const updateQuantity = async (id, quantity) => {
+const updateQuantity = async (id, MaVTPT, quantity) => {
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_quantity_in_repair ${id}, '${quantity}'`
+      `exec sp_update_quantity_in_repair ${id}, '${MaVTPT}', '${quantity}'`
     );
     poolConnection.close();
 
@@ -178,7 +178,7 @@ const updateQuantity = async (id, quantity) => {
   } catch (error) {
     console.log("Update product error", error.originalError.info.message);
     return {
-      EM: error,
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
