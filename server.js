@@ -42,6 +42,11 @@ app.use("/api/payment/", require("./src/routes/paymentReceiptApi"));
 app.use("/api/carBrand/", require("./src/routes/carBrandApi"));
 app.use("/api/supplier/", require("./src/routes/supplierApi"));
 app.use("/api/wage/", require("./src/routes/wageApi"));
+//Form import
+app.use("/api/import/", require("./src/routes/importFormApi"));
+
+//Statistic
+app.use("/api/")
 // config body bodyParser
 app.use(
   bodyParser.urlencoded({
