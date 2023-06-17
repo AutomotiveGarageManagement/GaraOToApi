@@ -7,7 +7,8 @@ const {
 } = require("../services/carBrandServices");
 const createANewCarBrand = async (req, res) => {
   try {
-    const { TenHX } = req.body.TenHX;
+    const TenHX = req.body.TenHX;
+    console.log(TenHX);
     const data = await insertCarBrand(TenHX);
     if (data && +data.EC == 1) {
       return res.status(201).json({
