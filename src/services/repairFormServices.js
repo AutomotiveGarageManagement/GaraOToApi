@@ -21,7 +21,7 @@ const insertRepair = async (MaTN, TongTien) => {
   } catch (error) {
     console.log("Tạo mới phiếu sửa chữa bị lỗi : " + error);
     return {
-      EM: "Server Error : Tạo mới phiếu sửa chữa không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -56,7 +56,7 @@ const insertRepairDetail = async (
   } catch (error) {
     console.log("Thêm VTPT bị lỗi : " + error);
     return {
-      EM: "Server Error : Thêm VTPT không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
@@ -64,10 +64,10 @@ const insertRepairDetail = async (
 };
 const addRepair = async (req) => {
   try {
-    const { BienSoXe, MaTN, productDetail } = req.body;
+    const { MaTN, productDetail } = req.body;
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_check_TonTai_PhieuSX '${BienSoXe}' `
+      `exec sp_check_TonTai_PhieuSX '${MaTN}' `
     );
     poolConnection.close();
 
@@ -113,21 +113,21 @@ const addRepair = async (req) => {
   } catch (error) {
     console.log("Tạo mới phiếu sửa chữa bị lỗi : " + error);
     return {
-      EM: "Tạo mới phiếu sửa chữa không thành công!",
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };
   }
 };
-const getInfoById = async (MaCX) => {
+const getInfoById = async (MaTN) => {
   try {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_repair_details '${MaCX}'`);
+      .query(`exec sp_getInfo_repair_details '${MaTN}'`);
     poolConnection.close();
     console.log(data);
-    if (data) {
+    if (data.recordset.length > 0) {
       return {
         EM: "Lấy Thông Tin thành công!",
         EC: 1,
@@ -159,11 +159,11 @@ const removeProduct = async (id) => {
   }
 };
 
-const updateQuantity = async (id, quantity) => {
+const updateQuantity = async (id, MaVTPT, quantity) => {
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_quantity_in_repair ${id}, '${quantity}'`
+      `exec sp_update_quantity_in_repair ${id}, '${MaVTPT}', '${quantity}'`
     );
     poolConnection.close();
 
@@ -178,7 +178,7 @@ const updateQuantity = async (id, quantity) => {
   } catch (error) {
     console.log("Update product error", error.originalError.info.message);
     return {
-      EM: error,
+      EM: error.originalError.info.message,
       EC: -1,
       DT: "",
     };

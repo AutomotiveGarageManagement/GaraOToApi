@@ -1,6 +1,6 @@
 const config = {
   server: "DESKTOP-2RL3R3I", // serrver name
-  database: "GaraOto", // name of Database
+  database: "GaraOTo", // name of Database
   user: "sa", // user name
   password: "loc281202",
   port: 1433, // port for  SQL Server

@@ -46,10 +46,12 @@ const createANewStaff = async (
 };
 const loginForStaff = async (TenTaiKhoan, MatKhau) => {
   try {
+    // console.log(TenTaiKhoan, MatKhau);
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.request().query("exec sp_get_infor_login");
     // let isCorrectPassword = false;
     const dataRe = await data.recordset;
+    console.log(data);
     for (let i in dataRe) {
       if (dataRe[i].TenTaiKhoan == TenTaiKhoan) {
         dataObj = await dataRe[i];
@@ -190,12 +192,13 @@ const updateInfo = async (
   DiaChi,
   SDT,
   MaChucVu,
+  TenTaiKhoan,
   MatKhau
 ) => {
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_staff_info '${id}', N'${HoTen}' , '${GioiTinh}','${CMND}',N'${DiaChi}' , '${SDT}','${MaChucVu}','${MatKhau}' `
+      `exec sp_update_staff_info '${id}', N'${HoTen}' , '${GioiTinh}','${CMND}',N'${DiaChi}' , '${SDT}','${MaChucVu}','${TenTaiKhoan}','${MatKhau}' `
     );
     poolConnection.close();
 

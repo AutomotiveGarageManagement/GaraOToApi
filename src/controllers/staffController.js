@@ -12,6 +12,7 @@ const {
 const login = async (req, res) => {
   try {
     const { TenTaiKhoan, MatKhau } = req.body;
+
     const data = await loginForStaff(TenTaiKhoan, MatKhau);
     if (data && data.EC != -1) {
       return res.status(200).json({
@@ -75,7 +76,16 @@ const insertStaff = async (req, res) => {
 const updateStaffInfo = async (req, res) => {
   try {
     const id = req.params.id;
-    const { HoTen, GioiTinh, CMND, DiaChi, SDT, MaChucVu, MatKhau } = req.body;
+    const {
+      HoTen,
+      GioiTinh,
+      CMND,
+      DiaChi,
+      SDT,
+      MaChucVu,
+      TenTaiKhoan,
+      MatKhau,
+    } = req.body;
     const data = await updateInfo(
       id,
       HoTen,
@@ -84,6 +94,7 @@ const updateStaffInfo = async (req, res) => {
       DiaChi,
       SDT,
       MaChucVu,
+      TenTaiKhoan,
       MatKhau
     );
     if (data && +data.EC == 1) {

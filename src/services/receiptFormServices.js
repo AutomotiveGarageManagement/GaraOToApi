@@ -6,6 +6,7 @@ const insertReception = async (
   DiaChiCX,
   SDT,
   Email,
+  CMND,
   MaHangXe,
   BienSoXe,
   GhiChu,
@@ -15,7 +16,7 @@ const insertReception = async (
     // let hashPassStaff = hashPassword(MatKhau);
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_insert_reception N'${TenChuXe}' , N'${DiaChiCX}','${SDT}',N'${Email}' , '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
+      `exec sp_insert_reception N'${TenChuXe}' , N'${DiaChiCX}','${SDT}',N'${Email}' ,'${CMND}','${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
     );
     poolConnection.close();
     if (data) {
@@ -41,15 +42,15 @@ const insertReception = async (
     };
   }
 };
-const getInfoById = async (MaCX) => {
+const getCustomerByIdentifyCard = async (CMND) => {
   try {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_reception '${MaCX}'`);
+      .query(`exec sp_getInfo_reception '${CMND}'`);
     poolConnection.close();
     console.log(data);
-    if (data) {
+    if (data.recordset.length > 0) {
       return {
         EM: "Lấy Thông Tin thành công!",
         EC: 1,
@@ -57,7 +58,7 @@ const getInfoById = async (MaCX) => {
       };
     } else {
       return {
-        EM: "Lấy thông in thất bại!",
+        EM: "Lấy thông tin thất bại!",
         EC: 0,
         DT: [],
       };
@@ -71,12 +72,14 @@ const getInfoById = async (MaCX) => {
     };
   }
 };
+
 const updateInfo = async (
   id,
   TenChuXe,
   DiaChiCX,
   SDT,
   Email,
+  CMND,
   MaHangXe,
   BienSoXe,
   GhiChu,
@@ -85,11 +88,11 @@ const updateInfo = async (
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_reception '${id}', N'${TenChuXe}' , N'${DiaChiCX}','${SDT}','${Email}' , '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
+      `exec sp_update_reception '${id}', N'${TenChuXe}' , N'${DiaChiCX}','${SDT}','${Email}' ,'${CMND}', '${MaHangXe}','${BienSoXe}',N'${GhiChu}','${HanGiaoXe}' `
     );
     poolConnection.close();
 
-    console.log(data);
+    console.log(CMND);
     if (data) {
       return {
         EM: "Cập Nhật Thành Công!",
@@ -106,8 +109,39 @@ const updateInfo = async (
     };
   }
 };
+const getAllReceptionInfo = async () => {
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection
+      .request()
+      .query(`exec sp_getAll_receptions`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Get one user failed" + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
 module.exports = {
   insertReception,
-  getInfoById,
+  getCustomerByIdentifyCard,
   updateInfo,
+  getAllReceptionInfo,
 };

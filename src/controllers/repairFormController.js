@@ -28,9 +28,9 @@ const createRepair = async (req, res) => {
 };
 const getInfoFormRepair = async (req, res) => {
   try {
-    const MaCX = req.body.MaCX;
-    console.log(MaCX);
-    const data = await getInfoById(MaCX);
+    const MaTN = req.body.MaTN;
+    console.log(MaTN);
+    const data = await getInfoById(MaTN);
     if (data && +data.EC === 1) {
       return res.status(200).json({
         EM: data.EM,
@@ -74,12 +74,21 @@ const deleteProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const id = req.params.id;
   try {
-    await updateQuantity(id, req.body.quantity);
-    return res.status(200).json({
-      EM: "Cập Nhật Thành Công",
-      EC: 1,
-      DT: "",
-    });
+    const data = await updateQuantity(id, req.body.MaVTPT, req.body.quantity);
+    console.log(data);
+    if (data.EC != -1) {
+      return res.status(200).json({
+        EM: "Cập Nhật Thành Công",
+        EC: 1,
+        DT: "",
+      });
+    } else {
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: "",
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -90,7 +99,6 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const updateMB = async (req, res) => {};
 module.exports = {
   createRepair,
   getInfoFormRepair,
