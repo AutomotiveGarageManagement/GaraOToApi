@@ -44,6 +44,8 @@ app.use("/api/supplier/", require("./src/routes/supplierApi"));
 app.use("/api/wage/", require("./src/routes/wageApi"));
 //Form import
 app.use("/api/import/", require("./src/routes/importFormApi"));
+app.use("/api/stuff/", require("./src/routes/stuffApi"));
+app.use("/api/statistic/", require("./src/routes/statisticApi"));
 
 //Statistic
 app.use("/api/")
