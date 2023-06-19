@@ -42,7 +42,15 @@ app.use("/api/payment/", require("./src/routes/paymentReceiptApi"));
 app.use("/api/carBrand/", require("./src/routes/carBrandApi"));
 app.use("/api/supplier/", require("./src/routes/supplierApi"));
 app.use("/api/wage/", require("./src/routes/wageApi"));
+<<<<<<< HEAD
 app.use("/api/parameter/", require("./src/routes/parameterApi"));
+=======
+//Form import
+app.use("/api/import/", require("./src/routes/importFormApi"));
+
+//Statistic
+app.use("/api/")
+>>>>>>> a6a6d528acfa94e48e12d71a82fdca7007c047bd
 // config body bodyParser
 app.use(
   bodyParser.urlencoded({
