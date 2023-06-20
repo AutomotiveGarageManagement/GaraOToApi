@@ -37,18 +37,17 @@ const insertImport = async (
   }
 };
 const insertImportDetail = async (
-    MaVTPT,
     MaPN,
+    MaVTPT,
     SoLuong,
     DonGia,
-    TongTien
 ) => {
   try {
     const poolConnection = await sql.connect(config);
-    console.log(      `exec sp_insert_import_details '${MaVTPT}',N'${MaPN}' , '${SoLuong}', '${DonGia}', '${TongTien}' `
+    console.log(      `exec sp_insert_import_details N'${MaPN}' , '${MaVTPT}','${SoLuong}', '${DonGia}' `
     )
     let data = await poolConnection.query(
-      `exec sp_insert_import_details '${MaVTPT}',N'${MaPN}' , '${SoLuong}', '${DonGia}', '${TongTien}' `
+      `exec sp_insert_import_details N'${MaPN}' ,'${MaVTPT}','${SoLuong}', '${DonGia}' `
     );
     poolConnection.close();
     if (data) {
@@ -84,17 +83,18 @@ const addImport = async (req) => {
 
     console.log(ticketRepair.MaPN);
     if (ticketRepair.MaPN) {
-      const insertProductData = await insertImportDetail(
-        ticketRepair.MaPN,
-        productDetail.MaVTPT,
-        productDetail.MaPN,
-        productDetail.SoLuong,
-        productDetail.DonGia,
-        productDetail.TongTien
-      );
+      for (const product of productDetail) {
+        const insertProductData = await insertImportDetail(
+          ticketRepair.MaPN,
+          product.MaVTPT,
+          product.SoLuong,
+          product.DonGia,
+        );
+      }
+
       return {
-        EM: insertProductData.EM,
-        EC: insertProductData.EC,
+        EM: productDetail.EM,
+        EC: productDetail.EC,
       };
     }
     return {
