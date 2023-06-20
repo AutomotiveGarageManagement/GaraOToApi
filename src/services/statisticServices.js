@@ -64,6 +64,37 @@ const getSumTurnoverS = async () => {
     }
 };
 
+const getStatisticInvenS = async (start_date, end_date) => {
+  try {
+    const poolConnection = await sql.connect(config);
+    const data = await poolConnection
+      .request()
+      .query(`exec CombineResults '${start_date}', '${end_date}'`);
+    poolConnection.close();
+    console.log(data);
+    if (data) {
+      return {
+        EM: "Lấy Thông Tin thành công!",
+        EC: 1,
+        DT: data.recordset,
+      };
+    } else {
+      return {
+        EM: "Lấy thông tin thất bại!",
+        EC: 0,
+        DT: [],
+      };
+    }
+  } catch (error) {
+    console.log("Lấy thông tin bị lỗi: " + error);
+    return {
+      EM: "Lấy thông tin thất bại!",
+      EC: -1,
+      DT: "",
+    };
+  }
+};
+
 
 const getSumReceiptS = async () => {
     try {
@@ -134,4 +165,5 @@ module.exports = {
     getSumReceiptS,
   
     getRepairByMonthS,
+    getStatisticInvenS
 };
