@@ -4,7 +4,7 @@ const {
     getSumReceiptS,
   
     getRepairByMonthS,
-  } = require("../services/stuffServices");
+  } = require("../services/statisticServices");
   const getSumCustomer = async (req, res) => {
     try {
       const data = await getSumCustomerS();
@@ -22,7 +22,7 @@ const {
           DT: data.DT,
         });
       }
-    } catch (eror) {
+    } catch (error) {
       console.log(error);
       return res.status(500).json({
         EM: "Server Error : Lấy danh sách thất bại!",

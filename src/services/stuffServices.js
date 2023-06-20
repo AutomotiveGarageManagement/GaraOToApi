@@ -101,7 +101,7 @@ const updateInfo = async (id, TenVTPT, DVT, DonGia) => {
   try {
     const poolConnection = await sql.connect(config);
     let data = await poolConnection.query(
-      `exec sp_update_Stuff '${id}', N'${TenVTPT}' , '${DVT}',N'${DonGia}'`
+      `exec sp_update_stuff '${id}', N'${TenVTPT}' , '${DVT}',N'${DonGia}'`
     );
     poolConnection.close();
     // console.log(data.recordset[0].status);

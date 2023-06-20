@@ -9,16 +9,17 @@ const insertImport = async (
 ) => {
   try {
     const poolConnection = await sql.connect(config);
+
     let data = await poolConnection.query(
       `exec sp_insert_import '${MaNV}','${MaNCC}','${NgayLapPhieuNhap}','${TenNhaCungCap}','${TongTienNhapHang}' `
     );
-
+    console.log(data)
     poolConnection.close();
     if (data) {
       return {
         EM: "Lập phiếu sửa chữa thành công!",
         EC: 1,
-        MaPNH: data.recordset[0].NewPrimaryKey,
+        MaPN: data.recordset[0].NewPrimaryKey,
       };
     } else {
       return {
@@ -44,6 +45,8 @@ const insertImportDetail = async (
 ) => {
   try {
     const poolConnection = await sql.connect(config);
+    console.log(      `exec sp_insert_import_details '${MaVTPT}',N'${MaPN}' , '${SoLuong}', '${DonGia}', '${TongTien}' `
+    )
     let data = await poolConnection.query(
       `exec sp_insert_import_details '${MaVTPT}',N'${MaPN}' , '${SoLuong}', '${DonGia}', '${TongTien}' `
     );
@@ -70,56 +73,84 @@ const insertImportDetail = async (
 };
 const addImport = async (req) => {
   try {
-    const { BienSoXe, MaTN, productDetail } = req.body;
-    const poolConnection = await sql.connect(config);
-    let data = await poolConnection.query(
-      `exec sp_check_TonTai_PhieuNH '${BienSoXe}' `
+    const {MaPN, productDetail } = req.body;
+    const ticketRepair = await insertImport(
+      req.body.MaNV,
+      req.body.MaNCC,
+      req.body.NgayLapPhieuNhap,
+      req.body.TenNhaCungCap,
+      req.body.TongTienNhapHang,
     );
-    poolConnection.close();
 
-    if (data.recordset.length != 0) {
-      const productDetailData = await insertImportDetail(
-        data.recordset[0].id,
+    console.log(ticketRepair.MaPN);
+    if (ticketRepair.MaPN) {
+      const insertProductData = await insertImportDetail(
+        ticketRepair.MaPN,
         productDetail.MaVTPT,
         productDetail.MaPN,
         productDetail.SoLuong,
         productDetail.DonGia,
         productDetail.TongTien
       );
-
       return {
-        EM: productDetailData.EM,
-        EC: 1,
-      };
-    } else {
-      const ticketRepair = await insertImport(
-        req.body.MaNV,
-        req.body.MaNCC,
-        req.body.NgayLapPhieuNhap,
-        req.body.TenNhaCungCap,
-        req.body.TongTienNhapHang,
-      );
-
-      console.log(ticketRepair.MaPNH);
-      if (ticketRepair.MaPN) {
-        const insertProductData = await insertImportDetail(
-          ticketRepair.MaPN,
-          productDetail.MaVTPT,
-          productDetail.MaPN,
-          productDetail.SoLuong,
-          productDetail.DonGia,
-          productDetail.TongTien
-        );
-        return {
-          EM: insertProductData.EM,
-          EC: insertProductData.EC,
-        };
-      }
-      return {
-        EM: ticketRepair.EM,
-        EC: ticketRepair.EC,
+        EM: insertProductData.EM,
+        EC: insertProductData.EC,
       };
     }
+    return {
+      EM: ticketRepair.EM,
+      EC: ticketRepair.EC,
+    };
+    // const {MaPN, productDetail } = req.body;
+    // const poolConnection = await sql.connect(config);
+    // let data = await poolConnection.query(
+    //   `exec sp_check_TonTai_PhieuNH '${MaPN}' `
+    // );
+    // poolConnection.close();
+
+    // if (true) {
+    //   const productDetailData = await insertImportDetail(
+    //     data.recordset[0].id,
+    //     productDetail.MaVTPT,
+    //     productDetail.MaPN,
+    //     productDetail.SoLuong,
+    //     productDetail.DonGia,
+    //     productDetail.TongTien
+    //   );
+
+    //   return {
+    //     EM: productDetailData.EM,
+    //     EC: 1,
+    //   };
+    // } else {
+    //   const ticketRepair = await insertImport(
+    //     req.body.MaNV,
+    //     req.body.MaNCC,
+    //     req.body.NgayLapPhieuNhap,
+    //     req.body.TenNhaCungCap,
+    //     req.body.TongTienNhapHang,
+    //   );
+
+    //   console.log(ticketRepair.MaPN);
+    //   if (ticketRepair.MaPN) {
+    //     const insertProductData = await insertImportDetail(
+    //       ticketRepair.MaPN,
+    //       productDetail.MaVTPT,
+    //       productDetail.MaPN,
+    //       productDetail.SoLuong,
+    //       productDetail.DonGia,
+    //       productDetail.TongTien
+    //     );
+    //     return {
+    //       EM: insertProductData.EM,
+    //       EC: insertProductData.EC,
+    //     };
+    //   }
+    //   return {
+    //     EM: ticketRepair.EM,
+    //     EC: ticketRepair.EC,
+    //   };
+    // }
   } catch (error) {
     console.log("Tạo mới phiếu nhập hàng bị lỗi : " + error);
     return {
@@ -134,7 +165,7 @@ const getInfoById = async (MaPN) => {
     const poolConnection = await sql.connect(config);
     const data = await poolConnection
       .request()
-      .query(`exec sp_getInfo_inport_details '${MaPN}'`);
+      .query(`exec sp_getInfo_import_details '${MaPN}'`);
     poolConnection.close();
     console.log(data);
     if (data) {
@@ -223,7 +254,7 @@ const updateQuantity = async (id, quantity) => {
   }
 };
 module.exports = {
-  addRepair,
+  addImport,
   getInfoById,
   getAllImportInfo,
   removeProduct,

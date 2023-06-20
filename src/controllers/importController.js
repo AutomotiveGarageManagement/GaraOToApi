@@ -29,9 +29,9 @@ const {
   };
   const getInfoFormImport = async (req, res) => {
     try {
-      const MaCX = req.body.MaCX;
-      console.log(MaCX);
-      const data = await getInfoById(MaCX);
+      const MaPN = req.body.MaPN;
+      console.log(MaPN);
+      const data = await getInfoById(MaPN);
       if (data && +data.EC === 1) {
         return res.status(200).json({
           EM: data.EM,
@@ -55,7 +55,7 @@ const {
       });
     }
   };
-  const getAllImport = async (req, res) => {
+  const getInfoAllImport = async (req, res) => {
     try {
       const data = await getAllImportInfo();
       if (data && +data.EC === 1) {
@@ -121,7 +121,7 @@ const {
   module.exports = {
     createImport,
     getInfoFormImport,
-    getAllImport,
+    getInfoAllImport,
     deleteProduct,
     updateProduct,
   };

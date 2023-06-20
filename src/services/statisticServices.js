@@ -99,9 +99,10 @@ const getSumReceiptS = async () => {
 const getRepairByMonthS = async (Thang) => {
     try {
       const poolConnection = await sql.connect(config);
+      console.log(`exec sp_getRepairByMonth ${Thang}`)
       const data = await poolConnection
         .request()
-        .query(`exec sp_getRepairByMonthS N'${Thang}'`);
+        .query(`exec sp_getRepairByMonth ${Thang}`);
       poolConnection.close();
       console.log(data);
       if (data) {

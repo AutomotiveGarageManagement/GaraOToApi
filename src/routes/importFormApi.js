@@ -6,7 +6,7 @@ const {
   getInfoAllImport,
   deleteProduct,
   updateProduct,
-} = require("../controllers/repairFormController");
+} = require("../controllers/importController");
 router.route("/create/form").post(createImport);
 router.route("/get/information/form").post(getInfoFormImport);
 router.route("/get/information/all").post(getInfoAllImport);
